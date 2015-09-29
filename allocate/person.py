@@ -12,7 +12,7 @@ class Fellow(Person):
      and may or may not require a living room"""
 
     def __init__(self, first_name, last_name, living_required, gender=None):
-        super(Person, self).__init__(first_name, last_name, gender)
+        super(Fellow, self).__init__(first_name, last_name, gender)
         self.living_required = living_required  # boolean if fellow requires living
         self.living_room = None  # name of living room fellow is allocated
         self.gender = gender
