@@ -35,7 +35,7 @@ def populate():
     creates a database, tables and pre-polulates the tables
     with data
     '''
-    con = lite.connect('../bin/data.db')
+    con = lite.connect('../bin/amity.db')
 
     with con:
         cur = con.cursor()
