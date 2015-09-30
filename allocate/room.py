@@ -1,5 +1,5 @@
 class Room(object):
-    """ base class for rooms at amity """
+    '''base class for rooms at amity'''
 
     def __init__(self, room_name):
         self.room_name = room_name
@@ -8,7 +8,7 @@ class Room(object):
 
 
 class Office(Room):
-    """ an office room at amity """
+    '''an office room at amity'''
 
     def __init__(self, room_name, space_limit):
         super(Office, self).__init__(room_name)
@@ -16,7 +16,7 @@ class Office(Room):
 
 
 class Living(Room):
-    """ a living room at amity """
+    '''a living room at amity'''
 
     def __init__(self, room_name, space_limit):
         super(Living, self).__init__(room_name)

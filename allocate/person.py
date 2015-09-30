@@ -1,5 +1,5 @@
 class Person(object):
-    """base class for a person at amity that requires rooms"""
+    '''base class for a person at amity that requires rooms'''
 
     def __init__(self, first_name, last_name):
         self.first_name = first_name
@@ -8,8 +8,8 @@ class Person(object):
 
 
 class Fellow(Person):
-    """class for a fellow person at amity that requires a office room
-     and may or may not require a living room"""
+    '''class for a fellow person at amity that requires a office room
+     and may or may not require a living room'''
 
     def __init__(self, first_name, last_name, living_required, gender=None):
         super(Fellow, self).__init__(first_name, last_name)
@@ -19,6 +19,6 @@ class Fellow(Person):
 
 
 class Staff(Person):
-    """class for a staff person at amity that only requires
-     office room allocation"""
+    '''class for a staff person at amity that only requires
+     office room allocation'''
     pass
