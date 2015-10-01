@@ -100,5 +100,6 @@ def populate():
         cur.executemany("INSERT INTO Living VALUES(?, ?, 0, NULL, NULL)",
                         living_data)
         print 'Living table pre-populated with data'
+        print '\n'
 
 populate()
