@@ -25,10 +25,10 @@ class RoomTestCase(unittest.TestCase):
         self.assertEqual(self.room.room_name, 'onyx',
                          'incorrect room name was set')
 
-    def test_space_limit(self):
+    def test_space_count(self):
         '''test space limit is set to 0 on instantiation'''
-        self.assertEqual(self.room.space_limit, 0,
-                         'space_limit not initially set to 0')
+        self.assertEqual(self.room.space_count, 0,
+                         'space_count not initially set to 0')
 
     def test_occupants(self):
         '''test occupants initially empty'''
@@ -39,7 +39,7 @@ class RoomTestCase(unittest.TestCase):
 class OfficeTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.room = Office('gold', 6)
+        self.room = Office('gold')
 
     def tearDown(self):
         del self.room
@@ -59,10 +59,10 @@ class OfficeTestCase(unittest.TestCase):
         self.assertEqual(self.room.room_name, 'gold',
                          'incorrect room name was set')
 
-    def test_space_limit(self):
+    def test_space_count(self):
         '''test space limit is only 6'''
-        self.assertEqual(self.room.space_limit, 6,
-                         'space_limit not set to 6')
+        self.assertLessEqual(self.room.space_count, 6,
+                             'office space_count exceeds 6')
 
     def test_occupants(self):
         '''test occupants initially empty'''
@@ -73,7 +73,7 @@ class OfficeTestCase(unittest.TestCase):
 class LivingTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.room = Living('crystal', 4)
+        self.room = Living('crystal')
 
     def tearDown(self):
         del self.room
@@ -93,10 +93,10 @@ class LivingTestCase(unittest.TestCase):
         self.assertEqual(self.room.room_name, 'crystal',
                          'incorrect room name was set')
 
-    def test_space_limit(self):
+    def test_space_count(self):
         '''test space limit is only 4'''
-        self.assertEqual(self.room.space_limit, 4,
-                         'space_limit not set to 4')
+        self.assertLessEqual(self.room.space_count, 4,
+                             'living space_count exceeds 4')
 
     def test_occupants(self):
         '''test occupants is initially empty'''

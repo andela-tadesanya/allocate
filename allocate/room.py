@@ -3,22 +3,20 @@ class Room(object):
 
     def __init__(self, room_name):
         self.room_name = room_name
-        self.space_limit = 0
+        self.space_count = 0
         self.occupants = []
 
 
 class Office(Room):
     '''an office room at amity'''
 
-    def __init__(self, room_name, space_limit):
+    def __init__(self, room_name):
         super(Office, self).__init__(room_name)
-        self.space_limit = 6
 
 
 class Living(Room):
     '''a living room at amity'''
 
-    def __init__(self, room_name, space_limit):
+    def __init__(self, room_name):
         super(Living, self).__init__(room_name)
-        self.space_limit = 4
         self.room_gender = None
