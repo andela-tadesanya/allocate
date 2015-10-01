@@ -1,5 +1,6 @@
 from cmd import Cmd
 import os.path
+from person import Fellow, Staff
 
 
 class Operator(Cmd):
@@ -16,16 +17,14 @@ class Operator(Cmd):
             (e.g staff or fellow) is found when processing a file
            '''
 
-        print '''
-Error on line %d, for entry %s %s. Please type in "fellow"
-or "staff" for the entry
-''' % (index, fname, lname)
+        print '''Error on line %d, for entry %s %s. Please type in "fellow"
+or "staff" for the entry''' % (index, fname, lname)
 
         status = ''
 
         # get an input of either staff or fellow from the user
         while status != 'staff' and status != 'fellow':
-            status = raw_input('>>> ')
+            status = raw_input('> ')
 
         return status.lower()
 
@@ -45,9 +44,15 @@ or "staff" for the entry
                 
                 # create objects with regard to employment status
                 if words[2].lower() == 'staff':
-                    print 'Its a staff at %d' % (index + 1)
+                    # create an object of Staff
+                    obj = Staff(words[0].lower(), words[1].lower())
                 else:
-                    print 'Its a fellow at %d' % (index + 1)
+                    # create an object of Fellow
+                    # check if sex of fellow is given
+                    if len(words) > 4:
+                        obj = Fellow(words[0].lower(), words[1].lower(), words[3].lower(), words[4].lower())
+                    else:
+                        obj = Fellow(words[0].lower(), words[1].lower(), words[3].lower())
 
     def do_batch_allocate(self, source):
         '''Allocate people to rooms via data from a file'''
@@ -77,5 +82,5 @@ or "staff" for the entry
 
 if __name__ == '__main__':
     prompt = Operator()
-    prompt.prompt = '> '
+    prompt.prompt = '>>> '
     prompt.cmdloop('Starting program.....type \'help\' to get the list of available commands')

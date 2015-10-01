@@ -58,3 +58,4 @@ target/
 
 # irrelevant project files
 test_boilerplate.py
+*.db-journal

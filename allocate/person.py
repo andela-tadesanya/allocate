@@ -1,3 +1,6 @@
+import sqlite3 as lite
+
+
 class Person(object):
     '''base class for a person at amity that requires rooms'''
 
@@ -17,8 +20,25 @@ class Fellow(Person):
         self.living_room = None  # name of living room fellow is allocated
         self.gender = gender
 
+        # add object to database
+        con = lite.connect('bin/amity.db')
+        with con:
+            cur = con.cursor()
+            cur.execute("INSERT INTO 'Fellow'('First_name','Last_name','Office_room','Living_required','Living_room','Gender') VALUES (?, ?, ?, ?, ?, ?);", (unicode(self.first_name), unicode(self.last_name), self.office_room, self.living_required, self.living_room, self.gender))
+
+    def assign_office():
+        pass
+
 
 class Staff(Person):
     '''class for a staff person at amity that only requires
      office room allocation'''
-    pass
+    
+    def __init__(self, first_name, last_name):
+        super(Staff, self).__init__(first_name, last_name)
+
+        # add object to database
+        con = lite.connect('bin/amity.db')
+        with con:
+            cur = con.cursor()
+            cur.execute("INSERT INTO 'Staff'('First_name','Last_name','Office_room') VALUES (?, ?, ?);", (unicode(self.first_name), unicode(self.last_name), self.office_room))

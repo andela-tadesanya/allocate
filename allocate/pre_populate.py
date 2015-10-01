@@ -42,6 +42,8 @@ def populate():
         # drop tables Office and Living if it already exists
         cur.execute("DROP TABLE IF EXISTS Office")
         cur.execute("DROP TABLE IF EXISTS Living")
+        cur.execute("DROP TABLE IF EXISTS Staff")
+        cur.execute("DROP TABLE IF EXISTS Fellow")
 
         # create Office table
         cur.execute('''
@@ -70,7 +72,7 @@ def populate():
         cur.execute('''
                     CREATE TABLE 'Staff' (
                       'Id'  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-                      'First_name'  TEXT NOT NULL,
+                      'First_name'  TEXT,
                       'Last_name' TEXT,
                       'Office_room' TEXT
                     );
@@ -81,7 +83,7 @@ def populate():
         cur.execute('''
                     CREATE TABLE 'Fellow' (
                       'Id'  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-                      'First_name'  TEXT NOT NULL,
+                      'First_name'  TEXT,
                       'Last_name' TEXT,
                       'Office_room' TEXT,
                       'Living_required' TEXT,
