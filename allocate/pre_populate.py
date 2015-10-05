@@ -1,32 +1,40 @@
 import sqlite3 as lite
+try:
+    import cPickle as pickle
+except:
+    import pickle
 
+
+# pickle an empty list that will act as occupants in rooms
+occupants = []
+occupants = pickle.dumps(occupants)
 
 # tuple containing Office data to populate Office table
 office_data = (
-           (1, 'gold'),
-           (2, 'silver'),
-           (3, 'diamond'),
-           (4, 'ruby'),
-           (5, 'sapphire'),
-           (6, 'emerald'),
-           (7, 'opal'),
-           (8, 'topaz'),
-           (9, 'amethyst'),
-           (10, 'amber'),
+           (1, 'gold', occupants),
+           (2, 'silver', occupants),
+           (3, 'diamond', occupants),
+           (4, 'ruby', occupants),
+           (5, 'sapphire', occupants),
+           (6, 'emerald', occupants),
+           (7, 'opal', occupants),
+           (8, 'topaz', occupants),
+           (9, 'amethyst',occupants),
+           (10, 'amber', occupants),
            )
 
 # tuple containing Living data to populate Living table
 living_data = (
-           (1, 'london'),
-           (2, 'tokyo'),
-           (3, 'lagos'),
-           (4, 'chicago'),
-           (5, 'moscow'),
-           (6, 'shangai'),
-           (7, 'paris'),
-           (8, 'rome'),
-           (9, 'madrid'),
-           (10, 'berlin'),
+           (1, 'london', occupants),
+           (2, 'tokyo', occupants),
+           (3, 'lagos', occupants),
+           (4, 'chicago', occupants),
+           (5, 'moscow', occupants),
+           (6, 'shangai', occupants),
+           (7, 'paris', occupants),
+           (8, 'rome', occupants),
+           (9, 'madrid', occupants),
+           (10, 'berlin', occupants),
            )
 
 
@@ -94,14 +102,15 @@ def populate():
         print 'Fellow table created'
 
         # insert 10 rows in Office table
-        cur.executemany("INSERT INTO Office VALUES(?, ?, 0, NULL)",
+        cur.executemany("INSERT INTO Office VALUES(?, ?, 0, ?)",
                         office_data)
         print 'Office table pre-populated with data'
 
         # insert 10 rows in Living table
-        cur.executemany("INSERT INTO Living VALUES(?, ?, 0, NULL, NULL)",
+        cur.executemany("INSERT INTO Living VALUES(?, ?, 0, NULL, ?)",
                         living_data)
         print 'Living table pre-populated with data'
         print '\n'
 
-populate()
+if __name__ == '__main__':
+    populate()
