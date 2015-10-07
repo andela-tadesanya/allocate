@@ -422,7 +422,11 @@ with data'''
         print "Quitting....."
         raise SystemExit
 
-if __name__ == '__main__':
+
+def main():
     prompt = Operator()
     prompt.prompt = '>>> '
-    prompt.cmdloop('Starting program.....type \'help\' to get the list of available commands')
+    prompt.cmdloop('Starting program.....type \'help\' to get the list of available commands')    
+
+if __name__ == '__main__':
+    main()
