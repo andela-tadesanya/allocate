@@ -1,6 +1,5 @@
 <snippet>
 <content>
-<![CDATA[
 # allocate
 Models a room allocation system for Amity(A company office/hostel facility). 
 
@@ -30,8 +29,6 @@ Run `python setup.py install` in the root directory.
 Thanks to God, myself and the vending machine at amity. And Chidi for allowing extra time to work on this project :)
 
 ## License
-
-
-]]>
+MIT License 
 </content>
 </snippet>
