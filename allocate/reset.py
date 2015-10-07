@@ -5,40 +5,7 @@ except:
     import pickle
 
 
-# pickle an empty list that will act as occupants in rooms
-occupants = []
-occupants = pickle.dumps(occupants)
-
-# tuple containing Office data to populate Office table
-office_data = (
-           (1, 'gold', occupants),
-           (2, 'silver', occupants),
-           (3, 'diamond', occupants),
-           (4, 'ruby', occupants),
-           (5, 'sapphire', occupants),
-           (6, 'emerald', occupants),
-           (7, 'opal', occupants),
-           (8, 'topaz', occupants),
-           (9, 'amethyst',occupants),
-           (10, 'amber', occupants),
-           )
-
-# tuple containing Living data to populate Living table
-living_data = (
-           (1, 'london', occupants),
-           (2, 'tokyo', occupants),
-           (3, 'lagos', occupants),
-           (4, 'chicago', occupants),
-           (5, 'moscow', occupants),
-           (6, 'shangai', occupants),
-           (7, 'paris', occupants),
-           (8, 'rome', occupants),
-           (9, 'madrid', occupants),
-           (10, 'berlin', occupants),
-           )
-
-
-def populate():
+def reset():
     '''
     creates a database, tables and pre-polulates the tables
     with data
@@ -62,7 +29,6 @@ def populate():
                         'Occupants' BLOB
                     );
                     ''')
-        print 'Office table created.'
 
         # create Living table
         cur.execute('''
@@ -74,7 +40,6 @@ def populate():
                         'Occupants' BLOB
                     );
                     ''')
-        print 'Living table created'
 
         # create Staff table
         cur.execute('''
@@ -85,7 +50,6 @@ def populate():
                       'Office_room' TEXT
                     );
                     ''')
-        print 'Staff table created'
 
         # create Fellow table
         cur.execute('''
@@ -99,18 +63,9 @@ def populate():
                       'Gender'  INTEGER
                     );
                     ''')
-        print 'Fellow table created'
 
-        # insert 10 rows in Office table
-        cur.executemany("INSERT INTO Office VALUES(?, ?, 0, ?)",
-                        office_data)
-        print 'Office table pre-populated with data'
-
-        # insert 10 rows in Living table
-        cur.executemany("INSERT INTO Living VALUES(?, ?, 0, NULL, ?)",
-                        living_data)
-        print 'Living table pre-populated with data'
-        print '\n'
+    print "Database reset completed."
+    print "Run pre_populate to create create initial data."
 
 if __name__ == '__main__':
-    populate()
+    reset()

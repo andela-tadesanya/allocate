@@ -10,7 +10,7 @@ try:
 except:
     import pickle
 from os.path import expanduser
-
+from reset import reset
 
 class Operator(Cmd):
 
@@ -411,6 +411,9 @@ with data'''
         else:
             print "Room with the name '%s' is already in use" % room_name
 
+    def do_reset(self, *args):
+        ''' reset database, truncate all tables'''
+        reset()
 
 
     def do_quit(self, args):
