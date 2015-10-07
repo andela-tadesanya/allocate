@@ -135,7 +135,7 @@ or "staff" for the entry''' % (index, fname, lname)
     def get_office_room(self, room):
         '''gets list of an office occupants from database'''
 
-        con = lite.connect('bin/amity.db')
+        con = lite.connect('amity.db')
         with con:
             con.row_factory = lite.Row
             cur = con.cursor()
@@ -154,7 +154,7 @@ or "staff" for the entry''' % (index, fname, lname)
     def get_living_room(self, room):
         '''gets list of a living room occupants from database'''
 
-        con = lite.connect('bin/amity.db')
+        con = lite.connect('amity.db')
         with con:
             con.row_factory = lite.Row
             cur = con.cursor()
@@ -173,7 +173,7 @@ or "staff" for the entry''' % (index, fname, lname)
     def is_name_vacant(self, room_name, room_type):
         '''check if the room name is already used'''
 
-        con = lite.connect('bin/amity.db')
+        con = lite.connect('amity.db')
         with con:
             con.row_factory = lite.Row
             cur = con.cursor()
@@ -190,7 +190,7 @@ or "staff" for the entry''' % (index, fname, lname)
         '''creates a room'''
 
         occupants = pickle.dumps([])
-        con = lite.connect('bin/amity.db')
+        con = lite.connect('amity.db')
         with con:
             con.row_factory = lite.Row
             cur = con.cursor()
@@ -227,7 +227,7 @@ with data'''
     def do_get_allocation(self, *args):
         '''displays room allocations'''
 
-        con = lite.connect('bin/amity.db')
+        con = lite.connect('amity.db')
         with con:
             con.row_factory = lite.Row
             cur = con.cursor()
@@ -268,7 +268,7 @@ with data'''
                 print "Invalid format."
 
         # fetch living and office room allocations
-        con = lite.connect('bin/amity.db')
+        con = lite.connect('amity.db')
         with con:
             con.row_factory = lite.Row
             cur = con.cursor()
@@ -332,7 +332,7 @@ with data'''
     def do_get_unallocated(self, *args):
         '''display unallocated people'''
 
-        con = lite.connect('bin/amity.db')
+        con = lite.connect('amity.db')
         with con:
             con.row_factory = lite.Row
             cur = con.cursor()

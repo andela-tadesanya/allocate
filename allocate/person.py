@@ -19,7 +19,7 @@ class Person(object):
         '''assign object to an office'''
 
         # get list of offices with available space
-        con = lite.connect('bin/amity.db')
+        con = lite.connect('amity.db')
         with con:
             con.row_factory = lite.Row
             cur = con.cursor()
@@ -65,7 +65,7 @@ class Fellow(Person):
         self.gender = gender
 
         # add object to database
-        con = lite.connect('bin/amity.db')
+        con = lite.connect('amity.db')
         with con:
             cur = con.cursor()
             cur.execute("INSERT INTO 'Fellow'('First_name','Last_name','Office_room','Living_required','Living_room','Gender') VALUES (?, ?, ?, ?, ?, ?);", (self.first_name, self.last_name, self.office_room, self.living_required, self.living_room, self.gender))
@@ -74,7 +74,7 @@ class Fellow(Person):
             self.id = cur.lastrowid
 
     def assign_living(self):
-        con = lite.connect('bin/amity.db')
+        con = lite.connect('amity.db')
         with con:
             con.row_factory = lite.Row
             cur = con.cursor()
@@ -127,7 +127,7 @@ class Staff(Person):
         super(Staff, self).__init__(first_name, last_name)
 
         # add object to database
-        con = lite.connect('bin/amity.db')
+        con = lite.connect('amity.db')
         with con:
             cur = con.cursor()
             cur.execute("INSERT INTO 'Staff'('First_name','Last_name','Office_room') VALUES (?, ?, ?);", (self.first_name, self.last_name, self.office_room))
