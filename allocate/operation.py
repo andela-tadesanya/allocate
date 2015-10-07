@@ -170,6 +170,34 @@ or "staff" for the entry''' % (index, fname, lname)
                 unpickled_result = []
         return unpickled_result
 
+    def is_name_vacant(self, room_name, room_type):
+        '''check if the room name is already used'''
+
+        con = lite.connect('bin/amity.db')
+        with con:
+            con.row_factory = lite.Row
+            cur = con.cursor()
+            sql = "SELECT * FROM %s WHERE Room_name = '%s'" % (room_type.capitalize(), room_name)
+            cur.execute(sql)
+            result = cur.fetchone()
+
+            if result is not None:
+                return False
+            else:
+                return True
+
+    def create_room(self, room_name, room_type):
+        '''creates a room'''
+
+        occupants = pickle.dumps([])
+        con = lite.connect('bin/amity.db')
+        with con:
+            con.row_factory = lite.Row
+            cur = con.cursor()
+            sql = "INSERT INTO '%s'('Room_name', 'Space_count', 'Occupants') VALUES('%s', 0, '%s')" % (room_type.capitalize(), room_name, occupants)
+            cur.execute(sql)
+        print "Room '%s' created." % (room_name)
+
     def do_batch_allocate(self, source):
         '''Allocate people to rooms via data from a file'''
 
@@ -362,6 +390,28 @@ with data'''
             print "\n".join(occu_list_living)
         else:
             print "No result found."
+
+    def do_add_room(self, *args):
+        '''create an additional room'''
+
+        room_name = raw_input('> Give the new room a name: ')
+        room_type = raw_input("> What type of room is it 'office' or 'living': ").lower()
+
+        while True:
+            if room_type == 'office' or room_type == 'living':
+                break
+            else:
+                print "Invalid entry."
+                room_type = raw_input("> What type of room is it 'office' or 'living': ")
+
+        # check if name is vacant
+        if self.is_name_vacant(room_name, room_type):
+            # create room
+            self.create_room(room_name, room_type)
+        else:
+            print "Room with the name '%s' is already in use" % room_name
+
+
 
     def do_quit(self, args):
         '''Quits the program.'''
