@@ -23,19 +23,23 @@ allocate takes a list of employees which can be either staff or fellows, from ei
 Run `python setup.py install` in the root directory.
 
 ## Usage
-To run tests, in the root directory after installing coverage run `coverage run -m unittest discover tests` then run `coverage report -m unittest discover tests` to get percentage coverage. To run tests without coverage simply run `python -m unittest discover tests`.
+To run tests, in the root directory after installing coverage run `coverage run -m unittest discover tests` then run `coverage report -m unittest discover tests` to get percentage coverage. To run tests without coverage simply run
+`python -m unittest discover tests`.
 
 ###### Starting the program
-After successful installation, open your command line and run `python`. When the python interpreter opens run `from allocate.operation import *`. Then run `main()` to start the program.
+After successful installation, open your command line and run `python`. When the python interpreter opens run
+`from allocate.operation import *`. Then run `main()` to start the program.
 
 ###### Help
-Type `help` to get a list of commands you can run. Type `help <command>` to know more about each command. e.g. `help pre_populate`
+Type `help` to get a list of commands you can run. Type `help <command>` to know more about each command. 
+e.g. `help pre_populate`
 
 ###### Pre-populate
 You must run `pre_populate` to create and pre-populate the database.
 
 ###### Batch Allocate
-Run `batch_allocate <fullpathtofile>` to load data from either a .txt or .csv file (e.g. `batch_allocate C:\Users\Andela\test.txt`). Don't worry about '\' or '/' the program takes care of that.
+Run `batch_allocate <fullpathtofile>` to load data from either a .txt or .csv file
+(e.g. `batch_allocate C:\Users\Andela\test.txt`). Don't worry about '\' or '/' the program takes care of that.
 
 ###### Format of input files
 Each line hold data for one person only in the following format:
