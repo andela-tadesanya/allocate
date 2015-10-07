@@ -1,8 +1,15 @@
 from cmd import Cmd
 import os.path
 from person import Fellow, Staff
+from room import Living, Office
 from pre_populate import populate
 import csv
+import sqlite3 as lite
+try:
+    import cPickle as pickle
+except:
+    import pickle
+from os.path import expanduser
 
 
 class Operator(Cmd):
@@ -125,6 +132,43 @@ or "staff" for the entry''' % (index, fname, lname)
 
         print "Finished processing..."
 
+    def get_office_room(self, room):
+        '''gets list of an office occupants from database'''
+
+        con = lite.connect('bin/amity.db')
+        with con:
+            con.row_factory = lite.Row
+            cur = con.cursor()
+            sql = "SELECT Occupants from Office where Room_name = '%s'" % room
+            cur.execute(sql)
+            result = cur.fetchone()
+
+            if result is not None:
+                # unpickle the data
+                unpickled_result = pickle.loads(str(result['Occupants']))
+            else:
+                # return empty list
+                unpickled_result = []
+        return unpickled_result
+
+    def get_living_room(self, room):
+        '''gets list of a living room occupants from database'''
+
+        con = lite.connect('bin/amity.db')
+        with con:
+            con.row_factory = lite.Row
+            cur = con.cursor()
+            sql = "SELECT Occupants from Living where Room_name = '%s'" % room
+            cur.execute(sql)
+            result = cur.fetchone()
+
+            if result is not None:
+                # unpickle the data
+                unpickled_result = pickle.loads(str(result['Occupants']))
+            else:
+                # return empty list
+                unpickled_result = []
+        return unpickled_result
 
     def do_batch_allocate(self, source):
         '''Allocate people to rooms via data from a file'''
@@ -152,8 +196,175 @@ with data'''
 
         populate()
 
+    def do_get_allocation(self, *args):
+        '''displays room allocations'''
+
+        con = lite.connect('bin/amity.db')
+        with con:
+            con.row_factory = lite.Row
+            cur = con.cursor()
+
+            # fetch and instantiate objects of Office from database
+            cur.execute("SELECT * FROM Office")
+            office_rows = cur.fetchall()
+            for row in office_rows:
+                # create an Office object call get_occupants method on each
+                office = Office(row['Room_name'])
+                office.space_count = row['Space_count']
+                office.occupants = pickle.loads(str(row['Occupants']))
+                office.get_occupants()
+
+            # fetch and instantiate objects of Living from database
+            cur.execute("SELECT * FROM Living")
+            living_rows = cur.fetchall()
+            for row in living_rows:
+                # create an Living object call get_occupants method on each
+                living = Living(row['Room_name'])
+                living.space_count = row['Space_count']
+                living.occupants = pickle.loads(str(row['Occupants']))
+                living.get_occupants()
+
+    def do_print_allocation(self, *args):
+        '''prints room allocations into a txt or csv file'''
+        # set home directory 
+        home = expanduser('~')
+
+        # set output file type
+        file_type = ''
+        filepath = ''
+        while True:
+            file_type = raw_input('> Please input \'txt\' or \'csv\' for output file format: ')
+            if file_type == 'txt' or file_type == 'csv':
+                break
+            else:
+                print "Invalid format."
+
+        # fetch living and office room allocations
+        con = lite.connect('bin/amity.db')
+        with con:
+            con.row_factory = lite.Row
+            cur = con.cursor()
+
+            # fetch office occupants
+            cur.execute('SELECT Room_name, Space_count, Occupants FROM Office')
+            office_rows = cur.fetchall()
+
+            # fetch living occupants
+            cur.execute("SELECT Room_name, Space_count, Occupants FROM Living")
+            living_rows = cur.fetchall()
+
+            if file_type == 'txt':
+                # create file path
+                filepath = os.path.join(home, 'allocation.txt')
+
+                # open file to write to
+                with open(filepath, 'w') as f:
+                    for row in office_rows:
+                        f.write('%s (OFFICE)\n' % (row['Room_name']))
+                        if row['Space_count'] == 0:
+                            f.write('Empty')
+                        else:
+                            room_occupants = pickle.loads(str(row['Occupants']))
+                            line = ", ".join(room_occupants)
+                            f.write(line + '\n\n')
+
+                    for row in living_rows:
+                        f.write('%s (LIVING)\n' % (row['Room_name']))
+                        if row['Space_count'] == 0:
+                            f.write('Empty')
+                        else:
+                            room_occupants = pickle.loads(str(row['Occupants']))
+                            line = ", ".join(room_occupants)
+                            f.write(line + '\n\n')
+            else:
+                # create file path
+                filepath = os.path.join(home, 'allocation.csv')
+
+                # open file to write to
+                with open(filepath, 'w') as f:
+                    writer = csv.writer(f)
+                    for row in office_rows:
+                        writer.writerow((row['Room_name'], 'OFFICE'))
+                        if row['Space_count'] == 0:
+                            writer.writerow(('Empty'))
+                        else:
+                            room_occupants = pickle.loads(str(row['Occupants']))
+                            writer.writerow(room_occupants)
+
+                    for row in living_rows:
+                        writer.writerow((row['Room_name'], 'LIVING'))
+                        if row['Space_count'] == 0:
+                            writer.writerow(('Empty'))
+                        else:
+                            room_occupants = pickle.loads(str(row['Occupants']))
+                            writer.writerow(room_occupants)
+
+        print "Allocations outputted to %s" % filepath
+
+    def do_get_unallocated(self, *args):
+        '''display unallocated people'''
+
+        con = lite.connect('bin/amity.db')
+        with con:
+            con.row_factory = lite.Row
+            cur = con.cursor()
+
+            # fetch unallocated staff
+            cur.execute('SELECT * from staff where Office_room is null')
+            unallocated_staff = cur.fetchall()
+
+            # fetch unallocated fellows
+            cur.execute("SELECT * from fellow where (Office_room is null) or (Living_room is null and Living_required = 'y')")
+            unallocated_fellows = cur.fetchall()
+
+            # display unallocated staff
+            print "List of Unallocated people:\n"
+            print "{0:25} {1:10} {2:15} {3:15}".format('Name of Person', 'Position', 'Office Room', 'Living Room')
+            print "{0:25} {1:10} {2:15} {3:15}".format('-'*25, '-'*10, '-'*15, '-'*15)
+
+            for staff in unallocated_staff:
+                fullname = '%s %s' % (staff['First_name'], staff['Last_name'])
+                print "{0:25} {1:10} {2:15}".format(fullname, 'staff', staff['Office_room'])
+
+            for fellow in unallocated_fellows:
+                fullname = '%s %s' % (fellow['First_name'], fellow['Last_name'])
+
+                # format the Office_room variable
+                if fellow['Office_room'] is not None:
+                    office = ''
+                else:
+                    office = None
+
+                # format the Living_room variable
+                if fellow['Living_room'] is not None:
+                    living = ''
+                else:
+                    living = None
+
+                print "{0:25} {1:10} {2:15} {3:15}".format(fullname, 'fellow', office, living)
+
+    def do_get_room(self, *args):
+        '''displays occupants of a given room'''
+
+        room = raw_input('> Input the name of the room: ')
+
+        # check if the room is an office
+        occu_list_office = self.get_office_room(room)
+
+        # check if room is a living
+        occu_list_living = self.get_living_room(room)
+
+        if occu_list_office:
+            print "Occupants in %s are: \n" % (room)
+            print "\n".join(occu_list_office)
+        elif occu_list_living:
+            print "Occupants in %s are: \n" % (room)
+            print "\n".join(occu_list_living)
+        else:
+            print "No result found."
+
     def do_quit(self, args):
-        """Quits the program."""
+        '''Quits the program.'''
 
         print "Quitting....."
         raise SystemExit
