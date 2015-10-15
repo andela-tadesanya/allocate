@@ -1,14 +1,18 @@
 import unittest
 from allocate.room import Room, Office, Living
+from allocate import pre_populate
+from allocate import reset
 
 
 class RoomTestCase(unittest.TestCase):
 
     def setUp(self):
+        pre_populate.populate()
         self.room = Room('onyx')
 
     def tearDown(self):
         del self.room
+        reset.reset()
 
     def test_class(self):
         '''test object is an instance of Room'''
@@ -39,10 +43,12 @@ class RoomTestCase(unittest.TestCase):
 class OfficeTestCase(unittest.TestCase):
 
     def setUp(self):
+        pre_populate.populate()
         self.room = Office('gold')
 
     def tearDown(self):
         del self.room
+        reset.reset()
 
     def test_class(self):
         '''test object is instance of Office'''
@@ -73,10 +79,12 @@ class OfficeTestCase(unittest.TestCase):
 class LivingTestCase(unittest.TestCase):
 
     def setUp(self):
+        pre_populate.populate()
         self.room = Living('crystal')
 
     def tearDown(self):
         del self.room
+        reset.reset()
 
     def test_class(self):
         '''test object is instance of Living class'''
