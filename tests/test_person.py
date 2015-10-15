@@ -1,14 +1,18 @@
 import unittest
 from allocate.person import Person, Fellow, Staff
+from allocate import pre_populate
+from allocate import reset
 
 
 class PersonTestCase(unittest.TestCase):
 
     def setUp(self):
+        pre_populate.populate()
         self.me = Person('john', 'doe')
 
     def tearDown(self):
         del self.me
+        reset.reset()
 
     def test_class(self):
         '''test if object is of class Person'''
@@ -27,10 +31,22 @@ class PersonTestCase(unittest.TestCase):
         self.assertIsNone(self.me.office_room,
                           'office room not initially set to None')
 
+    def test_assign_office(self):
+        '''test person can be assigned an office'''
+        self.me.assign_office('Staff')
+        self.assertIsNotNone(self.me.office_room,
+                             'office room cannot be assigned to person')
+
+    def test_id(self):
+        '''test Person object has no id'''
+        self.assertIsNone(self.me.id,
+                          'An Object of Person cannot have an id')
+
 
 class FellowTestCase(unittest.TestCase):
 
     def setUp(self):
+        pre_populate.populate()
         self.me = Fellow('john', 'doe', True)
         self.her = Fellow('jane', 'doe', False, 'female')
         self.him = Fellow('joe', 'doe', False, 'male')
@@ -39,6 +55,7 @@ class FellowTestCase(unittest.TestCase):
         del self.me
         del self.her
         del self.him
+        reset.reset()
 
     def test_class(self):
         '''check is object is of class Fellow'''
@@ -79,14 +96,27 @@ class FellowTestCase(unittest.TestCase):
         self.assertTrue(self.me.living_required,
                         'living required not what was set in object')
 
+    def test_living_room(self):
+        '''test living room is initially set to None'''
+        self.assertIsNone(self.me.living_room,
+                          'living_room not initially set to None')
+
+    def test_assign_living(self):
+        '''test living room can be assigned'''
+        self.me.assign_living()
+        self.assertIsNotNone(self.me.living_room,
+                             'assign_living failed to assign a living room')
+
 
 class StaffTestCase(unittest.TestCase):
 
     def setUp(self):
+        pre_populate.populate()
         self.me = Staff('john', 'doe')
 
     def tearDown(self):
         del self.me
+        reset.reset()
 
     def test_class(self):
         '''test if object is of class Staff'''
@@ -104,3 +134,9 @@ class StaffTestCase(unittest.TestCase):
                          'object first name incorrect')
         self.assertEqual(self.me.last_name, 'doe',
                          'object last name incorrect')
+
+    def test_assign_staff_livingroom(self):
+        '''test staff cannot be assigned living rooms'''
+
+        with self.assertRaises(AttributeError):
+            self.me.assign_living()
