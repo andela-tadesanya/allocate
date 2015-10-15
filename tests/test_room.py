@@ -1,8 +1,13 @@
 import unittest
 from allocate.room import Room, Office, Living
+from allocate.person import Person, Fellow, Staff
 from allocate import pre_populate
 from allocate import reset
-
+import sqlite3 as lite
+try:
+    import cPickle as pickle
+except:
+    import pickle
 
 class RoomTestCase(unittest.TestCase):
 
@@ -45,6 +50,7 @@ class OfficeTestCase(unittest.TestCase):
     def setUp(self):
         pre_populate.populate()
         self.room = Office('gold')
+        self.staff1 = Staff('tosin', 'ade')
 
     def tearDown(self):
         del self.room
@@ -74,6 +80,42 @@ class OfficeTestCase(unittest.TestCase):
         '''test occupants initially empty'''
         self.assertEqual(len(self.room.occupants), 0,
                          'list of occupants not initially empty')
+
+    def get_office_room(self, room):
+        '''gets list of an office occupants from database'''
+
+        con = lite.connect('amity.db')
+        with con:
+            con.row_factory = lite.Row
+            cur = con.cursor()
+            sql = "SELECT Occupants from Office where Room_name = '%s'" % room
+            cur.execute(sql)
+            result = cur.fetchone()
+
+            if result is not None:
+                # unpickle the data
+                unpickled_result = pickle.loads(str(result['Occupants']))
+            else:
+                # return empty list
+                unpickled_result = []
+        return unpickled_result
+
+    def test_occupants_in_room(self):
+        '''test occupant added to office'''
+
+        # assign staff to an ofiice
+        self.staff1.assign_office('staff')
+        # get office staff was assigned to
+        staff_office = self.staff1.office_room
+
+        # get occupants list of the office
+        room_occupants = self.get_office_room(staff_office)
+
+        # check staff is in office
+        self.assertIn('tosin ade', room_occupants,
+                      'Person not in occupants list of an office')
+
+
 
 
 class LivingTestCase(unittest.TestCase):

@@ -34,7 +34,13 @@ class PersonTestCase(unittest.TestCase):
     def test_assign_office(self):
         '''test person can be assigned an office'''
         self.me.assign_office('Staff')
-        self.assertIsNotNone(self.me.office_room)
+        self.assertIsNotNone(self.me.office_room,
+                             'office room cannot be assigned to person')
+
+    def test_id(self):
+        '''test Person object has no id'''
+        self.assertIsNone(self.me.id,
+                          'An Object of Person cannot have an id')
 
 
 class FellowTestCase(unittest.TestCase):
@@ -90,6 +96,17 @@ class FellowTestCase(unittest.TestCase):
         self.assertTrue(self.me.living_required,
                         'living required not what was set in object')
 
+    def test_living_room(self):
+        '''test living room is initially set to None'''
+        self.assertIsNone(self.me.living_room,
+                          'living_room not initially set to None')
+
+    def test_assign_living(self):
+        '''test living room can be assigned'''
+        self.me.assign_living()
+        self.assertIsNotNone(self.me.living_room,
+                             'assign_living failed to assign a living room')
+
 
 class StaffTestCase(unittest.TestCase):
 
@@ -117,3 +134,9 @@ class StaffTestCase(unittest.TestCase):
                          'object first name incorrect')
         self.assertEqual(self.me.last_name, 'doe',
                          'object last name incorrect')
+
+    def test_assign_staff_livingroom(self):
+        '''test staff cannot be assigned living rooms'''
+
+        with self.assertRaises(AttributeError):
+            self.me.assign_living()
