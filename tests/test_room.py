@@ -81,6 +81,11 @@ class OfficeTestCase(unittest.TestCase):
         self.assertEqual(len(self.room.occupants), 0,
                          'list of occupants not initially empty')
 
+    def test_get_occupants(self):
+        '''test occupant list'''
+        self.assertIsNone(self.room.get_occupants())
+
+
     def get_office_room(self, room):
         '''gets list of an office occupants from database'''
 
@@ -152,6 +157,10 @@ class LivingTestCase(unittest.TestCase):
         '''test occupants is initially empty'''
         self.assertEqual(len(self.room.occupants), 0,
                          'list of occupants not initially empty')
+        
+    def test_get_occupants(self):
+        '''test occupant list'''
+        self.assertIsNone(self.room.get_occupants())
 
     def test_room_gender(self):
         '''test room gender initially None'''
